@@ -8,29 +8,37 @@ import { Label } from "@/components/ui/label"
 import { TextGenerateEffect } from "@/components/ui/text-generation-effect"
 import {motion} from 'framer-motion'
 import {toast} from "sonner"
+import { useRouter } from "next/navigation"
 import { AuroraBackground } from "@/components/ui/aurora-background"
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import {
     Avatar,
     AvatarFallback,
     AvatarImage,
   } from "@/components/ui/avatar"
 
-  import { Tabs,TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs,TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 
 const Generatedwords = `""Empowerment lies in our ability to heal not just ourselves, but also our communities. Every donation to healthcare campaigns is a transformative investment in the wellness and resilience of humanity.""`;
 
 export default function SignUp() {
   
+
   const [email,setEmail] = useState("");
+  const [name,setName] = useState("");
   const [password, setPassword] = useState("");
   const [retypePassword , setRetypePassword] = useState("");
-  const [userType , setUserType] = useState("individual");
+  const [userType , setUserType] = useState("individual"); 
 
-  const handleSubmit = (e) => {
+  const router = useRouter();
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
-    if(!email || !password || !retypePassword){
+    if(!email || !name || !password || !retypePassword){
       if(!email){
         toast("Sign up error", {
           description: "Email input field is empty",
@@ -40,6 +48,16 @@ export default function SignUp() {
           },
         })
       }
+      if(!name){
+        toast("Sign up error", {
+          description: "Name input field is empty",
+          action: {
+            label: "Undo",
+            onClick: () => console.log("Undo"),
+          },
+        })
+      }
+
       if(!password){
         toast("Sign up error", {
           description: "Password input field is empty",
@@ -58,9 +76,10 @@ export default function SignUp() {
           },
         })
       }
+      return ; 
     }
 
-    if (password !== retypePassword){
+    else if (password !== retypePassword){
       toast("Sign up error", {
         description: "Passwords don't match , recheck",
         action: {
@@ -68,6 +87,54 @@ export default function SignUp() {
           onClick: () => console.log("Undo"),
         },
       })
+
+      return ; 
+    }
+
+    else {
+
+      try {
+   
+        const res = await fetch('api/sign-up', {
+          method: 'POST',
+          headers : {
+            "Content-Type" : "application/json"
+          },
+          body : JSON.stringify({email,name,password,userType})
+        });
+        if(res.status === 301){
+          toast("Sign up error", {
+            description: "An account with this email already exists",
+            action: {
+              label: "Undo",
+              onClick: () => console.log("Undo"),
+            },
+          })
+          return ; 
+        }
+        if(res.status === 401){
+          toast("Sign up error", {
+            description: "An account with this email already exists",
+            action: {
+              label: "Undo",
+              onClick: () => console.log("Undo"),
+            },
+          })
+          return ; 
+        }
+  
+        if (res.ok){
+          router.push('/sign-in');
+        } else{
+          console.log('registration failed');
+        }
+        
+      } catch (error) {
+  
+        console.log("error",error);
+        
+      }
+
     }
   }
 
@@ -119,7 +186,7 @@ export default function SignUp() {
               <Tabs defaultValue="individual">
                 <TabsList>
                   <TabsTrigger value="individual" onClick={(e) => setUserType('individual')}>Individual</TabsTrigger>
-                  <TabsTrigger value="clinic" onClick={(e) => setUserType('clinic')}>Clinic</TabsTrigger>
+                  <TabsTrigger value="clinic" onClick={(e) => setUserType('clinic')}>Hospital</TabsTrigger>
                 </TabsList>
       
               </Tabs>
@@ -134,6 +201,29 @@ export default function SignUp() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            {userType === 'individual' ? 
+              <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                type="name"
+                placeholder="Akhil Rana"
+                required
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div> : 
+
+            <div className="grid gap-2">
+              <Label htmlFor="name">Name Of Hospital</Label>
+              <Input
+                id="name"
+                type="name"
+                placeholder="Aura Clinic"
+                required
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>   
+            }
             <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <Input id="password" type="password" required onChange={(e) => setPassword(e.target.value)} />
@@ -143,9 +233,7 @@ export default function SignUp() {
                 <Input id="retypePassword" type="password" required onChange={(e) => setRetypePassword(e.target.value)} />
             </div>
             <Button type="submit" className="w-full" onClick={handleSubmit}>
-              <Link href='/sign-in'>
-                Create Account
-              </Link>
+                Create Account   
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">

@@ -1,6 +1,7 @@
 "use client"
 import Link from "next/link"
 import Image from "next/image"
+import { signOut } from "next-auth/react"
 import { useState } from "react"
 import {
   CircleUser,
@@ -23,17 +24,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Campaigns from "@/components/sections/campaigns/campaigns"
-import Clinics from "@/components/sections/clinics/clinics"
 import Donations from "@/components/sections/donations/donations"
+import { useSession } from "next-auth/react"
 
 const components = [
-    <Clinics/>,
     <Campaigns/>,
     <Donations/>,
 ]
 
 export default function Dashboard() {
     const [showComponent,setShowComponent] = useState(0);
+    const { data: session} = useSession();
     return (
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
         <div className="hidden border-r bg-background md:block">
@@ -57,23 +58,7 @@ export default function Dashboard() {
                     onClick={() => setShowComponent(0)}
                 >
                     <Compass className="h-6 w-6" />
-                    Explore Hospitals
-                </Link>
-                <Link
-                    href="#"
-                    className="flex items-center gap-3 rounded-lg px-3 py-4 text-muted-foreground transition-all hover:text-primary"
-                    onClick={() => setShowComponent(1)}
-                >
-                    <Megaphone className="h-6 w-6" />
-                    Campaigns
-                </Link>
-                <Link
-                    href="#"
-                    className="flex items-center gap-3 rounded-lg px-3 py-4 text-muted-foreground transition-all hover:text-primary"
-                    onClick={() => setShowComponent(2)}
-                >
-                    <BadgeIndianRupee className="h-6 w-6" />
-                    My Donations
+                    My Campaigns
                 </Link>
                 </nav>
             </div>
@@ -111,21 +96,7 @@ export default function Dashboard() {
                     className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
                     >
                     <Compass className="h-5 w-5" />
-                    Explore Hospitals
-                    </Link>
-                    <Link
-                    href="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-                    >
-                    <Megaphone className="h-5 w-5" />
-                    Campaigns
-                    </Link>
-                    <Link
-                    href="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                    >
-                    <BadgeIndianRupee className="h-5 w-5" />
-                    My Donations
+                    My Campaigns
                     </Link>
                 </nav>
                 </SheetContent>
@@ -146,7 +117,7 @@ export default function Dashboard() {
                 <DropdownMenuItem><Link href='/settings'>Settings</Link></DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem><Link href='/sign-in'>Logout</Link></DropdownMenuItem>
+                <Link href='/sign-in'><DropdownMenuItem>Logout</DropdownMenuItem></Link>
                 </DropdownMenuContent>
             </DropdownMenu>
             </header>

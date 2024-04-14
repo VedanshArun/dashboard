@@ -1,58 +1,15 @@
-import Image from "next/image"
-import Link from "next/link"
-import {
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  CreditCard,
-  File,
-  ListFilter,
-  MoreVertical,
-  Truck,
-} from "lucide-react"
-
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-
 import { Input } from "@/components/ui/input"
+import CreateCampaign from "./create-campaign"
+
 export default function Campaigns() {
   return (
     <div className="flex max-h-screen w-full flex-col">
@@ -63,18 +20,15 @@ export default function Campaigns() {
         <h2 className="scroll-m-20 pb-2 text-3xl font-semibold tracking-tight first:mt-0">
           Campaigns
         </h2>
-        <Input className="rounded-lg mt-5" placeholder="Search for Campaigns..." type="search" />
+        <div className="flex items-center justify-center mt-5">
+          <Input className="rounded-lg mr-5" placeholder="Search for Campaigns..." type="search" />
+          <CreateCampaign/>
+        </div>
         </div>
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-3">
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
               <Card className="w-full max-w-xs">
-                  <Image
-                    src='/hospital.png'
-                    width={400}
-                    height={400}
-                    alt="image"
-                    className="aspect-[1.6]"
-                  />
+          
                 <CardHeader className="p-4">
                   <CardTitle className="text-2xl">Fundraiser for Apollo..</CardTitle>
                 </CardHeader>
@@ -89,18 +43,10 @@ export default function Campaigns() {
                     <Progress value={70} aria-label="70% increase" />
                   </CardDescription>
                 </CardContent>
-                <CardFooter>
-                  <Button>Donate</Button>
-                </CardFooter>
+                
               </Card>
               <Card className="w-full max-w-xs">
-                  <Image
-                    src='/dilip.jpg'
-                    width={400}
-                    height={400}
-                    alt="image"
-                    className="aspect-[1.6]"
-                  />
+                  
                 <CardHeader className="p-4">
                   <CardTitle className="text-2xl">Dilip Kumar Cancer Fund</CardTitle>
                 </CardHeader>
@@ -115,9 +61,7 @@ export default function Campaigns() {
                     <Progress value={37} aria-label="70% increase" />
                   </CardDescription>
                 </CardContent>
-                <CardFooter>
-                  <Button>Donate</Button>
-                </CardFooter>
+            
               </Card>            
             </div>
           </div>
